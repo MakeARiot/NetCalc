@@ -2,34 +2,40 @@ package com.example.netcalc
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-    }
+    var ip1tv: TextInputEditText? = null
+    var ip2tv: TextInputEditText? = null
+    var masktv: TextInputEditText? = null
+    var restv: TextView? = null
+    var btn: Button? = null
+    var btn2: Button? = null
+    var spinner: Spinner? = null
 
-    @SuppressLint("SetTextI18n")
-    override fun onResume() {
-        super.onResume()
+        override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        val ip1tv: TextInputEditText = findViewById(R.id.textInputEdit1)
-        val ip2tv: TextInputEditText = findViewById(R.id.textInputEdit2)
-        val masktv: TextInputEditText = findViewById(R.id.textInputEditM)
-        val restv: TextView = findViewById(R.id.res)
-        val btn: Button = findViewById(R.id.button)
-        val btn2: Button = findViewById(R.id.button2)
-        masktv.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_CLASS_TEXT
-        ip1tv.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_CLASS_TEXT
-        ip2tv.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_CLASS_TEXT
+        ip1tv= findViewById(R.id.textInputEdit1)
+        ip2tv = findViewById(R.id.textInputEdit2)
+        masktv = findViewById(R.id.textInputEditM)
+        restv = findViewById(R.id.res)
+        btn = findViewById(R.id.button)
+        btn2 = findViewById(R.id.button2)
+        masktv!!.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_CLASS_TEXT
+        ip1tv!!.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_CLASS_TEXT
+        ip2tv!!.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_CLASS_TEXT
+        // начальные значения
+        ip1tv!!.setText("192.168.1.1")
+        ip2tv!!.setText("192.168.1.10")
 
         val data = Array<String>(33){""}
         data[0] = "/0 - 0.0.0.0"
@@ -64,49 +70,52 @@ class MainActivity : AppCompatActivity() {
         data[29] = "/29 - 255.255.255.248"
         data[30] = "/30 - 255.255.255.252"
         data[31] = "/31 - 255.255.255.254"
-        data[32] = "/32 - 255.255.255.255" // МАСКИ ТУТ
+        data[32] = "/32 - 255.255.255.255"
 
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        val spinner = findViewById<Spinner>(R.id.spinner)
-        spinner.adapter = adapter
-        spinner.prompt = "Mask"
+        spinner = findViewById<Spinner>(R.id.spinner)
+        spinner!!.adapter = adapter
+        spinner!!.prompt = "Mask"
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onResume() {
+        super.onResume()
+
 
         try {
-            // начальные значения
-            ip1tv.setText("192.168.1.1")
-            ip2tv.setText("192.168.1.10")
-            masktv.setText("255.255.255.0")
 
             // выставить маску
-            spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            spinner!!.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
                     position: Int,
                     id: Long
                 ) {
-                    masktv.setText(spinner.selectedItem.toString().split(" - ")[1])
+                    masktv!!.setText(spinner!!.selectedItem.toString().split(" - ")[1])
                 }
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
             // рассчитать из одной ли сети адреса
-            btn.setOnClickListener {
+            btn!!.setOnClickListener {
                 try{
-                    isInOneNet(ip1tv, ip2tv, masktv, restv)
+                    isInOneNet(ip1tv!!, ip2tv!!, masktv!!, restv!!)
                 } catch (e: Exception){ Log.d("MyLog", e.toString()) }
             }
             // вся инфа по сетям
-            btn2.setOnClickListener{
+            btn2!!.setOnClickListener{
                 try {
-                    ip1tv.text = ip1tv.text
-                    ip2tv.text = ip2tv.text
+                    ip1tv!!.text = ip1tv!!.text
+                    ip2tv!!.text = ip2tv!!.text
                 } catch (e: Exception) { Log.d("MyLog", "ничего не понял, но очень интересно") }
                 try {
                     val intent = Intent(this, MainActivity2::class.java)
-                    intent.putExtra("mask", spinner.selectedItem.toString())
-                    intent.putExtra("ip1", ip1tv.text)
-                    intent.putExtra("ip2", ip2tv.text)
+                    intent.putExtra("mask", spinner!!.selectedItem.toString())
+                    intent.putExtra("ip1", ip1tv!!.text)
+                    intent.putExtra("ip2", ip2tv!!.text)
                     startActivity(intent)
                 } catch (e: Exception){ Log.d("MyLog", e.toString()) }
             }
