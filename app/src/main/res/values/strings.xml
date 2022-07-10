@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">IP Calc</string>
+    <string name="addr">Address: </string>
+    <string name="bitmask">Bitmask: </string>
+    <string name="netmask">Netmask: </string>
+    <string name="wildcard">Wildcard: </string>
+    <string name="broadcast">Broadcast: </string>
+    <string name="firsthost">First: </string>
+    <string name="lasthost">Last: </string>
+    <string name="network">Network: </string>
+    <string name="hosts">Hosts: </string>
+    <string name="subnets">Subnets: </string>
 </resources>
