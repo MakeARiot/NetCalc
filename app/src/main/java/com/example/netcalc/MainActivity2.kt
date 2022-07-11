@@ -3,8 +3,11 @@ package com.example.netcalc
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.pow
 
 class MainActivity2 : AppCompatActivity() {
@@ -25,9 +28,7 @@ class MainActivity2 : AppCompatActivity() {
     var networkView: TextView? = null
     var network16View: TextView? = null
     var subnetsnumberView: TextView? = null
-    var subnetsnumber16View: TextView? = null
     var hostsnumberView: TextView? = null
-    var hostsnumber16View: TextView? = null
 
     var adrBin: TextView? = null
     var netmaskBin: TextView? = null
@@ -43,30 +44,31 @@ class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
     }
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onResume() {
         super.onResume()
 
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
         addressView = findViewById<TextView>(R.id.address)
-        address16View = findViewById<TextView>(R.id.address16)
+        address16View = findViewById<TextView>(R.id.addrHex)
         bitmaskView = findViewById<TextView>(R.id.Bitmask)
         netmaskView = findViewById<TextView>(R.id.netmask)
-        netmask16View = findViewById<TextView>(R.id.netmask16)
+        netmask16View = findViewById<TextView>(R.id.netmaskHex)
         wildcardView = findViewById<TextView>(R.id.wildcard)
-        wildcard16View = findViewById<TextView>(R.id.wildcard16)
+        wildcard16View = findViewById<TextView>(R.id.wildcardHex)
         broadcastView = findViewById<TextView>(R.id.broadcast)
-        broadcast16View = findViewById<TextView>(R.id.broadcast16)
+        broadcast16View = findViewById<TextView>(R.id.broadcastHex)
         firsthostView = findViewById<TextView>(R.id.firsthost)
-        firsthost16View = findViewById<TextView>(R.id.firsthost16)
+        firsthost16View = findViewById<TextView>(R.id.firsthostHex)
         lasthostView = findViewById<TextView>(R.id.lasthost)
-        lasthost16View = findViewById<TextView>(R.id.lasthost16)
+        lasthost16View = findViewById<TextView>(R.id.lasthostHex)
         networkView = findViewById<TextView>(R.id.network)
-        network16View = findViewById<TextView>(R.id.network16)
+        network16View = findViewById<TextView>(R.id.networkHex)
         subnetsnumberView = findViewById<TextView>(R.id.subnetsnumber)
-        subnetsnumber16View = findViewById<TextView>(R.id.subnetsnumber16)
         hostsnumberView = findViewById<TextView>(R.id.hostsnumber)
-        hostsnumber16View = findViewById<TextView>(R.id.hostsnumber16)
 
         adrBin = findViewById(R.id.addrBin)
         netmaskBin = findViewById(R.id.netmaskBin)
@@ -89,28 +91,35 @@ class MainActivity2 : AppCompatActivity() {
         val firsthost = getFirstHost(network, sub_hos!![1])
         val lasthost = getLastHost(broadcast, sub_hos[1])
 
+        val maskHex = getHex(netmask)
+        val addrHex = getHex(ipString!!)
+        val wildcardHex = getHex(wildcard)
+        val broadcasthex = getHex(broadcast)
+        val firsthostHex = getHex(firsthost)
+        val lasthostHex = getHex(lasthost)
+        val networkhex = getHex(network)
+
+
         val maskNet = getMsNw(netmask, network)
 
         try {
-            addressView!!.text = "${resources.getString(R.string.addr)}$ipString"
-//        address16View!!.text = "${}"
-            bitmaskView!!.text = "${resources.getText(R.string.bitmask)}$bitmask"
-            netmaskView!!.text = "${resources.getText(R.string.netmask)}$netmask"
-//        netmask16View!!.text = "${}"
-            wildcardView!!.text = "${resources.getText(R.string.wildcard)}${wildcard}"
-//        wildcard16View!!.text = ""
-            broadcastView!!.text = "${resources.getText(R.string.broadcast)}${broadcast}"
-//        broadcast16View!!.text = ""
-            networkView!!.text = "${resources.getText(R.string.network)}${network}"
-//            network16View!!.text = ""
-            subnetsnumberView!!.text = "${resources.getText(R.string.subnets)}${sub_hos[0]}"
-//            subnetsnumber16View!!.text = ""
-            hostsnumberView!!.text = "${resources.getText(R.string.hosts)}${sub_hos[1]}"
-//            hostsnumber16View!!.text = ""
-            firsthostView!!.text = "${resources.getText(R.string.firsthost)}${firsthost}"
-//            firsthost16View!!.text = "First:\t${}"
-            lasthostView!!.text = "${resources.getText(R.string.lasthost)}${lasthost}"
-//            lasthost16View!!.text = "First:\t${}"
+            addressView!!.text = "$ipString"
+            address16View!!.text = addrHex
+            bitmaskView!!.text = bitmask
+            netmaskView!!.text = netmask
+            netmask16View!!.text = maskHex
+            wildcardView!!.text = wildcard
+            wildcard16View!!.text = wildcardHex
+            broadcastView!!.text = broadcast
+            broadcast16View!!.text = broadcasthex
+            networkView!!.text = network
+            network16View!!.text = networkhex
+            subnetsnumberView!!.text = sub_hos[0]
+            hostsnumberView!!.text = sub_hos[1]
+            firsthostView!!.text = firsthost
+            firsthost16View!!.text = firsthostHex
+            lasthostView!!.text = lasthost
+            lasthost16View!!.text = lasthostHex
 
             adrBin!!.text = getBin(ipString!!)
             netmaskBin!!.text = maskNet[0]
@@ -381,53 +390,26 @@ class MainActivity2 : AppCompatActivity() {
         return lastHost
     }
 
+    fun getHex(string: String): String{
+        try {
+            val list = ArrayList<String>()
+            string.split(".").forEach { list.add(it.toLong().toString(16)) }
+            Log.d("MyLog", "getHex $list")
+            return list.toString().removeSuffix("]")
+                        .removePrefix("[").replace(", ", ":").uppercase(Locale.ROOT)
+        } catch (e: Exception) {
+            Log.d("MyLog", "getHex $e")
+        }
+        return ""
+    }
+
     fun getBin(string: String): String{
         val list = ArrayList<UByte>()
-        string!!.split(".").forEach { list.add(it.toUByte()) }
+        string.split(".").forEach { list.add(it.toUByte()) }
 
         return getUByteListToBinStringList(list).toString().removePrefix("[")
             .removeSuffix("]").replace(", ", ".")
     }
-
-//    fun getAddressBin(): String{
-//        val list = ArrayList<UByte>()
-//        ipString!!.split(".").forEach { list.add(it.toUByte()) }
-//
-//        return getUByteListToBinStringList(list).toString().removePrefix("[")
-//            .removeSuffix("]").replace(", ", ".")
-//    }
-//
-//    fun getWildcardBin(wildcard: String): String{
-//        val list = ArrayList<UByte>()
-//        wildcard.split(".").forEach { list.add(it.toUByte()) }
-//
-//        return getUByteListToBinStringList(list).toString().removePrefix("[")
-//            .removeSuffix("]").replace(", ", ".")
-//    }
-//
-//    fun getBroadcastBin(broadcast: String): String{
-//        val list = ArrayList<UByte>()
-//        broadcast.split(".").forEach { list.add(it.toUByte()) }
-//
-//        return getUByteListToBinStringList(list).toString().removePrefix("[")
-//            .removeSuffix("]").replace(", ", ".")
-//    }
-//
-//    fun getFirstHostBin(first: String): String{
-//        val list = ArrayList<UByte>()
-//        first.split(".").forEach { list.add(it.toUByte()) }
-//
-//        return getUByteListToBinStringList(list).toString().removePrefix("[")
-//            .removeSuffix("]").replace(", ", ".")
-//    }
-//
-//    fun getlastHostBin(last: String): String{
-//        val list = ArrayList<UByte>()
-//        last.split(".").forEach { list.add(it.toUByte()) }
-//
-//        return getUByteListToBinStringList(list).toString().removePrefix("[")
-//            .removeSuffix("]").replace(", ", ".")
-//    }
 
     fun getMsNw(netmask: String, network: String): ArrayList<String> {
         val res = ArrayList<String>(2)

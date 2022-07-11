@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:id="@+id/ipNum"
@@ -37,15 +37,6 @@
                 android:textSize="@dimen/Activity2_head_text_size"
                 tools:ignore="SpUsage" />
 
-            <TextView
-                android:id="@+id/value16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="16-ричный код:"
-                android:textAlignment="textEnd"
-                android:textSize="@dimen/Activity2_head_text_size"
-                tools:ignore="SpUsage" />
         </LinearLayout>
 
         <View
@@ -58,36 +49,22 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/addr" />
             <TextView
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/address16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginBottom="3dp"
-            android:background="#BCAAAA" />
-
-        <TextView
-            android:id="@+id/Bitmask"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            />
 
         <View
             android:layout_width="match_parent"
@@ -99,22 +76,48 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/bitmask" />
+            <TextView
+                android:id="@+id/Bitmask"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:layout_weight="1"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
+                />
 
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/netmask" />
             <TextView
                 android:id="@+id/netmask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/netmask16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -127,22 +130,21 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/wildcard" />
             <TextView
                 android:id="@+id/wildcard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/wildcard16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -155,22 +157,21 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
-
             <TextView
-                android:id="@+id/broadcast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/network" />
+            <TextView
+                android:id="@+id/network"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/broadcast16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -185,22 +186,48 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/broadcast" />
+            <TextView
+                android:id="@+id/broadcast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
+                />
 
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/firsthost" />
             <TextView
                 android:id="@+id/firsthost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/firsthost16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -213,22 +240,21 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/lasthost" />
             <TextView
                 android:id="@+id/lasthost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/lasthost16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -241,50 +267,21 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
-
             <TextView
-                android:id="@+id/network"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
-
-            <TextView
-                android:id="@+id/network16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginBottom="3dp"
-            android:background="#BCAAAA" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="18dp"
-            android:orientation="horizontal">
-
+                android:layout_weight="4"
+                android:text="@string/hosts" />
             <TextView
                 android:id="@+id/hostsnumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/hostsnumber16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -297,22 +294,21 @@
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:orientation="horizontal">
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/subnets" />
             <TextView
                 android:id="@+id/subnetsnumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/purple_200"
                 />
 
-            <TextView
-                android:id="@+id/subnetsnumber16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                />
         </LinearLayout>
 
         <View
@@ -327,7 +323,7 @@
             android:layout_height="wrap_content"
             android:text="2-ичное представление"
             android:textSize="@dimen/Activity2_head_text_size"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="5dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -341,7 +337,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/addrBinText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -353,6 +348,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -380,6 +376,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -407,6 +404,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -434,6 +432,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -461,6 +460,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -488,6 +488,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -515,6 +516,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textIsSelectable="true"
+                android:textColor="@color/green_my"
                 />
         </LinearLayout>
 
@@ -524,6 +526,216 @@
             android:layout_marginBottom="3dp"
             android:background="#BCAAAA" />
 
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="16-ричное представление"
+            android:textSize="@dimen/Activity2_head_text_size"
+            android:layout_marginTop="5dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/addrBinText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/addr" />
+
+            <TextView
+                android:id="@+id/addrHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/netmask" />
+
+            <TextView
+                android:id="@+id/netmaskHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/wildcard" />
+
+            <TextView
+                android:id="@+id/wildcardHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/network" />
+
+            <TextView
+                android:id="@+id/networkHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/broadcast" />
+
+            <TextView
+                android:id="@+id/broadcastHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/firsthost" />
+
+            <TextView
+                android:id="@+id/firsthostHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/lasthost" />
+
+            <TextView
+                android:id="@+id/lasthostHex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:paddingStart="5dp"
+                android:textColor="@color/teal_200"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:background="#BCAAAA" />
 
 
     </LinearLayout>

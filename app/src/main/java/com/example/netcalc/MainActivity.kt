@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
 
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
             ip1tv = findViewById(R.id.textInputEdit1)
             ip2tv = findViewById(R.id.textInputEdit2)
             masktv = findViewById(R.id.textInputEditM)
@@ -84,6 +86,12 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
+
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
+        val ping1btn = findViewById<Button>(R.id.ping1)
+        val ping2btn = findViewById<Button>(R.id.ping2)
+
         try {
             // выставить маску
             spinner!!.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
