@@ -160,7 +160,7 @@ class MainActivity() : AppCompatActivity() {
                     val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
 
                     if (ip2tv!!.text.toString() == network || ip2tv!!.text.toString() == broadcast){
-                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом или выходит за границы сети", Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
                     if (ip2tv!!.text.toString() == ""){
@@ -187,7 +187,7 @@ class MainActivity() : AppCompatActivity() {
                     val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
 
                     if (ip1tv!!.text.toString() == network || ip1tv!!.text.toString() == broadcast){
-                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом или выходит за границы сети", Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
                     if (ip1tv!!.text.toString() == ""){
