@@ -85,7 +85,7 @@ class MainActivity2 : AppCompatActivity() {
         val wildcard = getWildcard(mask).removeSuffix(".")
         val bitmask = maskString!!.split(" - ")[0]
         val netmask = maskString!!.split(" - ")[1]
-        val network = getNetwork().removeSuffix(".")
+        val network = getNetwork(netmask, ipString!!).removeSuffix(".")
         val sub_hos = getNumberOfSubnetsHosts(netmask)
         val broadcast = getBroadcast(netmask, network)
         val firsthost = getFirstHost(network, sub_hos!![1])
@@ -237,7 +237,7 @@ class MainActivity2 : AppCompatActivity() {
         broadcast.split(".").forEach { brDecList.add(it.toInt(2).toUByte()) }
         val brDec = brDecList.toString().removeSuffix("]").removePrefix("[")
             .replace(", ", ".")
-        Log.d("MyLog", "broadcast Int ${brDecList}")
+        Log.d("MyLog", "broadcast Int $brDecList")
 
         return  brDec
     }
@@ -334,12 +334,12 @@ class MainActivity2 : AppCompatActivity() {
         return ip
     }
 
-    fun getNetwork(): String{
+    fun getNetwork(netMask: String, ipString: String): String{
         var network = ""
 
         try {
             val maskb = ArrayList<UByte>()
-            maskString!!.split(" - ")[1].split(".").forEach { b ->
+            netMask!!.split(".").forEach { b ->
                 maskb.add(b.toUByte())
             }
             val ip1b = ArrayList<UByte>()
@@ -349,7 +349,7 @@ class MainActivity2 : AppCompatActivity() {
             for (i in 0..3) {
                 network += "${(maskb[i] and ip1b[i])}."
             }
-            return network
+            return network.removeSuffix(".")
         } catch (e: Exception) {
             Log.d("MyLog", "network $e")
         }

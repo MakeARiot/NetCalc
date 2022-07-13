@@ -1,17 +1,25 @@
 package com.example.netcalc
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.InputType
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.netcalc.MainActivity2.*
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
-class MainActivity : AppCompatActivity() {
 
+class MainActivity() : AppCompatActivity() {
     var ip1tv: TextInputEditText? = null
     var ip2tv: TextInputEditText? = null
     var masktv: TextInputEditText? = null
@@ -31,6 +39,7 @@ class MainActivity : AppCompatActivity() {
             ip2tv = findViewById(R.id.textInputEdit2)
             masktv = findViewById(R.id.textInputEditM)
             restv = findViewById(R.id.res)
+            restv!!.movementMethod = ScrollingMovementMethod()
             btnOneNet = findViewById(R.id.button)
             btnIp2 = findViewById(R.id.button2)
             btnIp1 = findViewById(R.id.button5)
@@ -84,13 +93,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onResume() {
+    override fun onResume(){
         super.onResume()
 
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
         val ping1btn = findViewById<Button>(R.id.ping1)
         val ping2btn = findViewById<Button>(R.id.ping2)
+
+        // пинговать айпи
+        ping1btn.setOnClickListener {
+            if (!isNetworkAvailable()){
+                Toast.makeText(applicationContext, "Отсутствует соединение с интернетом", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                val ans = withContext(Dispatchers.Default){
+                    ping(ip1tv!!.text.toString()) //
+                }
+                restv!!.text = ans
+            }
+        }
+
+        ping2btn.setOnClickListener {
+            if (!isNetworkAvailable()){
+                Toast.makeText(applicationContext, "Отсутствует соединение с интернетом", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                val ans = withContext(Dispatchers.Default){
+                    ping(ip2tv!!.text.toString())
+                }
+                restv!!.text = ans
+            }
+        }
 
         try {
             // выставить маску
@@ -108,50 +144,63 @@ class MainActivity : AppCompatActivity() {
             // рассчитать из одной ли сети адреса
             btnOneNet!!.setOnClickListener {
                 try{
-                    //--------------------------------------------------
                     if (ip2tv!!.text.toString() == "" && ip1tv!!.text.toString() == ""){
-                        Toast.makeText(this, "Введи оба айпи", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Введи оба айпи", Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
-                    //--------------------------------------------------
                     isInOneNet(ip1tv!!, ip2tv!!, masktv!!, restv!!)
                 } catch (e: Exception){ Log.d("MyLog", e.toString()) }
             }
             // вся инфа по сетям
             btnIp2!!.setOnClickListener{
-                Log.d("MyLog", "-------------------------")
+                Log.d("MyLog", "-----------1--------------")
+                ip2tv!!.text = ip2tv!!.text
+                try {
+                    val network = MainActivity2().getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip2tv!!.text.toString())
+                    val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
 
-                try {
-                    ip2tv!!.text = ip2tv!!.text
-                } catch (e: Exception) { Log.d("MyLog", "ничего не понял, но очень интересно") }
-                try {
-                    if (ip2tv!!.text.toString() == ""){
-                        Toast.makeText(this, "Введите айпи", Toast.LENGTH_LONG).show()
+                    if (ip2tv!!.text.toString() == network || ip2tv!!.text.toString() == broadcast){
+                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом", Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
-                    val intent = Intent(this, MainActivity2::class.java)
-                    intent.putExtra("mask", spinner!!.selectedItem.toString())
-//                    intent.putExtra("ip1", ip1tv!!.text)
-                    intent.putExtra("ip", ip2tv!!.text)
-                    startActivity(intent)
-                } catch (e: Exception){ Log.d("MyLog", e.toString()) }
+                    if (ip2tv!!.text.toString() == ""){
+                        Toast.makeText(applicationContext, "Введите айпи", Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
+                    else{
+                        val intent = Intent(applicationContext, MainActivity2::class.java)
+                        intent.putExtra("mask", spinner!!.selectedItem.toString())
+                        intent.putExtra("ip", ip2tv!!.text)
+                        Log.d("MyLog", "-----------2--------------")
+                        startActivity(intent)
+                    }
+                } catch (e: Exception){ Log.d("MyLog", "tyta $e") }
             }
             btnIp1!!.setOnClickListener{
-                Log.d("MyLog", "-------------------------")
+                Log.d("MyLog", "------------1-------------")
 
                 try {
                     ip1tv!!.text = ip1tv!!.text
                 } catch (e: Exception) { Log.d("MyLog", "ничего не понял, но очень интересно") }
                 try {
-                    if (ip1tv!!.text.toString() == ""){
-                        Toast.makeText(this, "Введите айпи", Toast.LENGTH_LONG).show()
+                    val network = MainActivity2().getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip1tv!!.text.toString())
+                    val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
+
+                    if (ip1tv!!.text.toString() == network || ip1tv!!.text.toString() == broadcast){
+                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом", Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
-                    val intent = Intent(this, MainActivity2::class.java)
-                    intent.putExtra("mask", spinner!!.selectedItem.toString())
-                    intent.putExtra("ip", ip1tv!!.text)
-//                    intent.putExtra("ip2", ip2tv!!.text)
-                    startActivity(intent)
+                    if (ip1tv!!.text.toString() == ""){
+                        Toast.makeText(applicationContext, "Введите айпи", Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
+                    else{
+                        val intent = Intent(applicationContext, MainActivity2::class.java)
+                        intent.putExtra("mask", spinner!!.selectedItem.toString())
+                        intent.putExtra("ip", ip1tv!!.text)
+                        Log.d("MyLog", "-----------2--------------")
+                        startActivity(intent)
+                    }
                 } catch (e: Exception){ Log.d("MyLog", e.toString()) }
             }
 
@@ -159,8 +208,9 @@ class MainActivity : AppCompatActivity() {
             Log.d("MyLog", e.toString())
         }
     }
+
     fun isInOneNet(ip1tv: TextInputEditText, ip2tv: TextInputEditText,
-                   masktv: TextInputEditText, restv: TextView){
+                   masktv: TextInputEditText, restv: TextView) {
         val mask = ArrayList<UByte>()
         masktv.text.toString().split(".").forEach { b ->
             mask.add(b.toUByte())
@@ -180,11 +230,44 @@ class MainActivity : AppCompatActivity() {
             listres1.add(mask[i] and  ip1[i])
             listres2.add(mask[i] and ip2[i])
         }
-        Log.d("MyLog", listres1.toString())
-        Log.d("MyLog", listres2.toString())
 
         if (listres1 == listres2){
             restv.text = "Узлы находятся в одной сети"
         } else restv.text = "Узлы находятся в разных сетях"
+    }
+
+    fun ping(ip: String): String {
+
+        var str = ""
+        try {
+            val process = Runtime.getRuntime().exec(
+                "/system/bin/ping -c 8 $ip"
+            )
+            val reader = BufferedReader(
+                InputStreamReader(
+                    process.inputStream
+                )
+            )
+            var i: Int
+            val buffer = CharArray(4096)
+            val output = StringBuffer()
+            while (reader.read(buffer).also { i = it } > 0) output.append(buffer, 0, i)
+            reader.close()
+
+            str = output.toString()
+
+        } catch (e: IOException) {
+            Log.d("MyLog", "ping $e")
+        }
+        return str
+    }
+    fun isNetworkAvailable(): Boolean {
+        val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = manager.activeNetworkInfo
+        var isAvailable = false
+        if (networkInfo != null && networkInfo.isConnected) {
+            isAvailable = true
+        }
+        return isAvailable
     }
 }
