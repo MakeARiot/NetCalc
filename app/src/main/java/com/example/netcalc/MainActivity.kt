@@ -101,25 +101,32 @@ class MainActivity() : AppCompatActivity() {
         val ping1btn = findViewById<Button>(R.id.ping1)
         val ping2btn = findViewById<Button>(R.id.ping2)
 
-        // пинговать айпи
+        // ping 1
         ping1btn.setOnClickListener {
-            if (!isNetworkAvailable()){
-                Toast.makeText(applicationContext, "Отсутствует соединение с интернетом", Toast.LENGTH_LONG).show()
+            if (ip1tv!!.text.toString() == "1.2.3.4.5"){
+                Toast.makeText(this, "MADE BY kkramarskiy", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
+            if (!isNetworkAvailable()){
+                Toast.makeText(applicationContext,
+                    "Отсутствует соединение с интернетом", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            // асинхронный пинг, вывод результата в ScrollView
             CoroutineScope(Dispatchers.Main).launch {
                 val ans = withContext(Dispatchers.Default){
-                    ping(ip1tv!!.text.toString()) //
+                    ping(ip1tv!!.text.toString())
                 }
                 restv!!.text = ans
             }
         }
-
+        // ping 2
         ping2btn.setOnClickListener {
             if (!isNetworkAvailable()){
                 Toast.makeText(applicationContext, "Отсутствует соединение с интернетом", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
+            // асинхронный пинг, вывод результата в ScrollView
             CoroutineScope(Dispatchers.Main).launch {
                 val ans = withContext(Dispatchers.Default){
                     ping(ip2tv!!.text.toString())
@@ -151,7 +158,7 @@ class MainActivity() : AppCompatActivity() {
                     isInOneNet(ip1tv!!, ip2tv!!, masktv!!, restv!!)
                 } catch (e: Exception){ Log.d("MyLog", e.toString()) }
             }
-            // вся инфа по сетям
+            // вся инфа по сетям для 2 ip, переход на 2 экран
             btnIp2!!.setOnClickListener{
                 Log.d("MyLog", "-----------1--------------")
                 ip2tv!!.text = ip2tv!!.text
@@ -176,18 +183,21 @@ class MainActivity() : AppCompatActivity() {
                     }
                 } catch (e: Exception){ Log.d("MyLog", "tyta $e") }
             }
+            // вся инфа по сетям для 1 ip, переход на 2 экран
             btnIp1!!.setOnClickListener{
                 Log.d("MyLog", "------------1-------------")
 
                 try {
                     ip1tv!!.text = ip1tv!!.text
-                } catch (e: Exception) { Log.d("MyLog", "ничего не понял, но очень интересно") }
+                } catch (e: Exception) { Log.d("MyLog", "$e") }
                 try {
                     val network = MainActivity2().getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip1tv!!.text.toString())
                     val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
 
                     if (ip1tv!!.text.toString() == network || ip1tv!!.text.toString() == broadcast){
-                        Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом или выходит за границы сети", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext,
+                            "Ip является адресом сети или широковещательным адресом или выходит за границы сети",
+                            Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
                     if (ip1tv!!.text.toString() == ""){
@@ -209,6 +219,7 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
+    // проверяет в одной ли сети два ip, сразу выводит результат в TextView
     fun isInOneNet(ip1tv: TextInputEditText, ip2tv: TextInputEditText,
                    masktv: TextInputEditText, restv: TextView) {
         val mask = ArrayList<UByte>()
@@ -236,8 +247,8 @@ class MainActivity() : AppCompatActivity() {
         } else restv.text = "Узлы находятся в разных сетях"
     }
 
+    // возвращает текст запроса по ip
     fun ping(ip: String): String {
-
         var str = ""
         try {
             val process = Runtime.getRuntime().exec(
@@ -261,6 +272,8 @@ class MainActivity() : AppCompatActivity() {
         }
         return str
     }
+
+    // возвращает true если есть подключение к инету
     fun isNetworkAvailable(): Boolean {
         val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = manager.activeNetworkInfo

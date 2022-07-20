@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 import kotlin.collections.ArrayList
@@ -45,6 +46,7 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
     }
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onResume() {
@@ -98,27 +100,26 @@ class MainActivity2 : AppCompatActivity() {
         val firsthostHex = getHex(firsthost)
         val lasthostHex = getHex(lasthost)
         val networkhex = getHex(network)
-
-
         val maskNet = getMsNw(netmask, network)
 
         try {
             addressView!!.text = "$ipString"
-            address16View!!.text = addrHex
             bitmaskView!!.text = bitmask
             netmaskView!!.text = netmask
-            netmask16View!!.text = maskHex
             wildcardView!!.text = wildcard
-            wildcard16View!!.text = wildcardHex
             broadcastView!!.text = broadcast
-            broadcast16View!!.text = broadcasthex
             networkView!!.text = network
-            network16View!!.text = networkhex
             subnetsnumberView!!.text = sub_hos[0]
             hostsnumberView!!.text = sub_hos[1]
             firsthostView!!.text = firsthost
-            firsthost16View!!.text = firsthostHex
             lasthostView!!.text = lasthost
+
+            address16View!!.text = addrHex
+            netmask16View!!.text = maskHex
+            wildcard16View!!.text = wildcardHex
+            broadcast16View!!.text = broadcasthex
+            network16View!!.text = networkhex
+            firsthost16View!!.text = firsthostHex
             lasthost16View!!.text = lasthostHex
 
             adrBin!!.text = getBin(ipString!!)
@@ -134,6 +135,7 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
+    // возвращает ArrayList<String> количество подсетей, количество хостов
     private fun getNumberOfSubnetsHosts(netmask: String): ArrayList<String>? {
         try {
             val net = Array(4){""}
@@ -202,6 +204,7 @@ class MainActivity2 : AppCompatActivity() {
         return null
     }
 
+    // возвращает String broadcast в десятичном виде
     fun getBroadcast(netmask: String, network: String): String {
         val maskUByteList =
             getUByteListToBinStringList(getIpToUByteList(netmask))
@@ -242,6 +245,7 @@ class MainActivity2 : AppCompatActivity() {
         return  brDec
     }
 
+    // принимает число, возвращет строку в двоичном виде
     private fun convStrToBin(num: Int): String{
         var binNum = ""
         try {
@@ -261,6 +265,7 @@ class MainActivity2 : AppCompatActivity() {
         return binNum
     }
 
+    // принимает ArrayList<UByte>, возвращает ArrayList<String> в двоичном виде
     fun getUByteListToBinStringList(uByteList: ArrayList<UByte>): ArrayList<String>{
         val list = ArrayList<String>(4)
         uByteList.forEach { num ->
@@ -294,6 +299,7 @@ class MainActivity2 : AppCompatActivity() {
         return list
     }
 
+    // возвращает маску ArrayList<UByte> в десятичном виде
     fun getMaskUByteList(): ArrayList<UByte>{
         val mask = ArrayList<UByte>()
 
@@ -308,6 +314,7 @@ class MainActivity2 : AppCompatActivity() {
         return mask
     }
 
+    // принимает маску в ArrayList<UByte>, возвращает String wildcard в десятичном виде
     fun getWildcard(mask: ArrayList<UByte>): String{
         var wildcard = ""
 
@@ -321,6 +328,7 @@ class MainActivity2 : AppCompatActivity() {
         return wildcard
     }
 
+    // принимает ipString String, возвращает ArrayList<UByte> в десятичном виде
     fun getIpToUByteList(ipString: String): ArrayList<UByte>{
         val ip = ArrayList<UByte>()
         try {
@@ -334,6 +342,7 @@ class MainActivity2 : AppCompatActivity() {
         return ip
     }
 
+    // принимает netMask: String, ipString: String, возвращает network: String в десятичном виде
     fun getNetwork(netMask: String, ipString: String): String{
         var network = ""
 
@@ -356,6 +365,7 @@ class MainActivity2 : AppCompatActivity() {
         return network
     }
 
+    // принимает network: String, hosts: String, возвращает firstHost: String в десятичном виде
     fun getFirstHost(network: String, hosts: String): String{
         if (hosts == "0"){
             return "No hosts available"
@@ -373,6 +383,7 @@ class MainActivity2 : AppCompatActivity() {
         return firstHost
     }
 
+    // принимает broadcast: String, hosts: String, возвращает lastHost: String в десятичном виде
     fun getLastHost(broadcast: String, hosts: String): String{
         if (hosts == "0"){
             return "No hosts available"
@@ -390,6 +401,7 @@ class MainActivity2 : AppCompatActivity() {
         return lastHost
     }
 
+    // принимает string: String, возвращает String в шеснадцатиричном виде
     fun getHex(string: String): String{
         try {
             val list = ArrayList<String>()
@@ -403,6 +415,7 @@ class MainActivity2 : AppCompatActivity() {
         return ""
     }
 
+    // принимает string: String, возвращает String в двоичном виде
     fun getBin(string: String): String{
         val list = ArrayList<UByte>()
         string.split(".").forEach { list.add(it.toUByte()) }
@@ -411,6 +424,7 @@ class MainActivity2 : AppCompatActivity() {
             .removeSuffix("]").replace(", ", ".")
     }
 
+    // принимает netmask: String, network: String в 1 экрана, возвращает ArrayList<String> netmask, network в двоичном виде
     fun getMsNw(netmask: String, network: String): ArrayList<String> {
         val res = ArrayList<String>(2)
         val maskStrBin =
