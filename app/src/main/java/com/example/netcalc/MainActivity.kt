@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.netcalc.MainActivity2.*
+import com.example.netcalc.IPv4.*
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.*
 import java.io.BufferedReader
@@ -29,11 +29,15 @@ class MainActivity() : AppCompatActivity() {
     var btnIp1: Button? = null
     var spinner: Spinner? = null
 
+        @SuppressLint("SetTextI18n")
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
 
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
+            val name = findViewById<TextView>(R.id.textView2)
+            name.text = "${resources.getString(R.string.app_name)} IPv4"
 
             ip1tv = findViewById(R.id.textInputEdit1)
             ip2tv = findViewById(R.id.textInputEdit2)
@@ -163,8 +167,10 @@ class MainActivity() : AppCompatActivity() {
                 Log.d("MyLog", "-----------1--------------")
                 ip2tv!!.text = ip2tv!!.text
                 try {
-                    val network = MainActivity2().getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip2tv!!.text.toString())
-                    val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
+                    val ip = IPv4(spinner!!.selectedItem.toString())
+
+                    val network = ip.getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip2tv!!.text.toString())
+                    val broadcast = ip.getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
 
                     if (ip2tv!!.text.toString() == network || ip2tv!!.text.toString() == broadcast){
                         Toast.makeText(applicationContext, "ip является адресом сети или широковещательным адресом или выходит за границы сети", Toast.LENGTH_LONG).show()
@@ -191,8 +197,10 @@ class MainActivity() : AppCompatActivity() {
                     ip1tv!!.text = ip1tv!!.text
                 } catch (e: Exception) { Log.d("MyLog", "$e") }
                 try {
-                    val network = MainActivity2().getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip1tv!!.text.toString())
-                    val broadcast = MainActivity2().getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
+                    val ip = IPv4(spinner!!.selectedItem.toString())
+
+                    val network = ip.getNetwork(spinner!!.selectedItem.toString().split(" - ")[1], ip1tv!!.text.toString())
+                    val broadcast = ip.getBroadcast(spinner!!.selectedItem.toString().split(" - ")[1], network)
 
                     if (ip1tv!!.text.toString() == network || ip1tv!!.text.toString() == broadcast){
                         Toast.makeText(applicationContext,

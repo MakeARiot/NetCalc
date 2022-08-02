@@ -82,24 +82,26 @@ class MainActivity2 : AppCompatActivity() {
         ipString = intent.extras?.get("ip").toString()
         maskString = intent.extras?.get("mask").toString()
 
-        val mask = getMaskUByteList()
-        val wildcard = getWildcard(mask).removeSuffix(".")
+        val ip = IPv4(maskString!!)
+
+        val mask = ip.getMaskUByteList()
+        val wildcard = ip.getWildcard(mask).removeSuffix(".")
         val bitmask = maskString!!.split(" - ")[0]
         val netmask = maskString!!.split(" - ")[1]
-        val network = getNetwork(netmask, ipString!!).removeSuffix(".")
-        val sub_hos = getNumberOfSubnetsHosts(netmask)
-        val broadcast = getBroadcast(netmask, network)
-        val firsthost = getFirstHost(network, sub_hos!![1])
-        val lasthost = getLastHost(broadcast, sub_hos[1])
+        val network = ip.getNetwork(netmask, ipString!!).removeSuffix(".")
+        val sub_hos = ip.getNumberOfSubnetsHosts(netmask)
+        val broadcast = ip.getBroadcast(netmask, network)
+        val firsthost = ip.getFirstHost(network, sub_hos!![1])
+        val lasthost = ip.getLastHost(broadcast, sub_hos[1])
 
-        val maskHex = getHex(netmask)
-        val addrHex = getHex(ipString!!)
-        val wildcardHex = getHex(wildcard)
-        val broadcasthex = getHex(broadcast)
-        val firsthostHex = getHex(firsthost)
-        val lasthostHex = getHex(lasthost)
-        val networkhex = getHex(network)
-        val maskNet = getMsNw(netmask, network)
+        val maskHex = ip.getHex(netmask)
+        val addrHex = ip.getHex(ipString!!)
+        val wildcardHex = ip.getHex(wildcard)
+        val broadcasthex = ip.getHex(broadcast)
+        val firsthostHex = ip.getHex(firsthost)
+        val lasthostHex = ip.getHex(lasthost)
+        val networkhex = ip.getHex(network)
+        val maskNet = ip.getMsNw(netmask, network)
 
         try {
             addressView!!.text = "$ipString"
@@ -121,21 +123,24 @@ class MainActivity2 : AppCompatActivity() {
             firsthost16View!!.text = firsthostHex
             lasthost16View!!.text = lasthostHex
 
-            adrBin!!.text = getBin(ipString!!)
+            adrBin!!.text = ip.getBin(ipString!!)
             netmaskBin!!.text = maskNet[0]
             networkBin!!.text = maskNet[1]
-            wildcardBin!!.text = getBin(wildcard)
-            broadcastBin!!.text = getBin(broadcast)
-            firstHostBin!!.text = getBin(firsthost)
-            lastHostBin!!.text = getBin(lasthost)
+            wildcardBin!!.text = ip.getBin(wildcard)
+            broadcastBin!!.text = ip.getBin(broadcast)
+            firstHostBin!!.text = ip.getBin(firsthost)
+            lastHostBin!!.text = ip.getBin(lasthost)
 
         } catch (e: Exception) {
             Log.d("MyLog", "$e")
         }
     }
+}
+
+class IPv4(val maskString: String){
 
     // возвращает ArrayList<String> количество подсетей, количество хостов
-    private fun getNumberOfSubnetsHosts(netmask: String): ArrayList<String>? {
+    fun getNumberOfSubnetsHosts(netmask: String): ArrayList<String>? {
         try {
             val net = Array(4) { "" }
             var binnetmaskstr = ""
@@ -300,16 +305,14 @@ class MainActivity2 : AppCompatActivity() {
                 Log.d("MyLog", "uByteToBin $e")
             }
         }
-
         return list
     }
 
     // возвращает маску ArrayList<UByte> в десятичном виде
     fun getMaskUByteList(): ArrayList<UByte> {
         val mask = ArrayList<UByte>()
-
         try {
-            maskString!!.split(" - ")[1].split(".").forEach { b ->
+            maskString.split(" - ")[1].split(".").forEach { b ->
                 mask.add(b.toUByte())
             }
             return mask
@@ -322,7 +325,6 @@ class MainActivity2 : AppCompatActivity() {
     // принимает маску в ArrayList<UByte>, возвращает String wildcard в десятичном виде
     fun getWildcard(mask: ArrayList<UByte>): String {
         var wildcard = ""
-
         try {
             // обратная маска
             mask.forEach { b -> wildcard += "${b.inv()}." }
@@ -350,7 +352,6 @@ class MainActivity2 : AppCompatActivity() {
     // принимает netMask: String, ipString: String, возвращает network: String в десятичном виде
     fun getNetwork(netMask: String, ipString: String): String {
         var network = ""
-
         try {
             val maskb = ArrayList<UByte>()
             netMask.split(".").forEach { b ->
