@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.pow
 
 class MainActivity2 : AppCompatActivity() {
@@ -48,6 +46,7 @@ class MainActivity2 : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
     }
+
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onResume() {
         super.onResume()
@@ -138,17 +137,17 @@ class MainActivity2 : AppCompatActivity() {
     // возвращает ArrayList<String> количество подсетей, количество хостов
     private fun getNumberOfSubnetsHosts(netmask: String): ArrayList<String>? {
         try {
-            val net = Array(4){""}
+            val net = Array(4) { "" }
             var binnetmaskstr = ""
             val list = ArrayList<Int>()
             Log.d("MyLog", netmask)
 
             netmask.split(".").forEach { list.add(it.toInt()) }
 
-            for (i in 0 until 4){
+            for (i in 0 until 4) {
                 var str = convStrToBin(list[i])
-                if (str.length <= 8){
-                    for (i in 0 until 8 - str.length){
+                if (str.length <= 8) {
+                    for (i in 0 until 8 - str.length) {
                         str += "0"
                     }
                 }
@@ -159,19 +158,19 @@ class MainActivity2 : AppCompatActivity() {
             var ind2 = 8
             var onecounter = 0
             var zerocounter = 0
-            for (i in 0 until 4){
+            for (i in 0 until 4) {
                 var temp = ""
-                for (j in ind1 until ind2){
+                for (j in ind1 until ind2) {
                     temp += binnetmaskstr[j]
                 }
                 ind1 += 8
                 ind2 += 8
                 net[i] = temp
             }
-            for (i in net){
-                if ('0' in i){
-                    for (j in i){
-                        if (j == '1'){
+            for (i in net) {
+                if ('0' in i) {
+                    for (j in i) {
+                        if (j == '1') {
                             onecounter++
                         } else zerocounter++
                     }
@@ -184,7 +183,7 @@ class MainActivity2 : AppCompatActivity() {
 
             subnets = base.toDouble().pow(onecounter).toInt()
 
-            for (i in 0 until zerocounter-1){
+            for (i in 0 until zerocounter - 1) {
                 if (i == 0) {
                     hosts += 2
                 }
@@ -192,7 +191,7 @@ class MainActivity2 : AppCompatActivity() {
             }
             hosts -= 2
             Log.d("MyLog", "subn: $subnets hosts: $hosts")
-            if (hosts < 0){
+            if (hosts < 0) {
                 hosts = 0
             }
             val res = ArrayList<String>()
@@ -200,7 +199,9 @@ class MainActivity2 : AppCompatActivity() {
             res.add("$hosts")
             return res
 
-        } catch (e: java.lang.Exception) { Log.d("MyLog", "$e") }
+        } catch (e: java.lang.Exception) {
+            Log.d("MyLog", "$e")
+        }
         return null
     }
 
@@ -219,13 +220,13 @@ class MainActivity2 : AppCompatActivity() {
         Log.d("MyLog", "network ${ipUByteList}")
 
         var index = 0
-        for (i in maskUByteList.indices){
+        for (i in maskUByteList.indices) {
             index = maskUByteList.indexOf('0')
         }
         val sb = StringBuilder(ipUByteList).also {
-            for (i in ipUByteList.indices){
-                if (i >= index){
-                    if (maskUByteList[i] == '.'){
+            for (i in ipUByteList.indices) {
+                if (i >= index) {
+                    if (maskUByteList[i] == '.') {
                         it.setCharAt(i, '.')
                     } else {
                         it.setCharAt(i, '1')
@@ -242,65 +243,69 @@ class MainActivity2 : AppCompatActivity() {
             .replace(", ", ".")
         Log.d("MyLog", "broadcast Int $brDecList")
 
-        return  brDec
+        return brDec
     }
 
     // принимает число, возвращет строку в двоичном виде
-    private fun convStrToBin(num: Int): String{
+    private fun convStrToBin(num: Int): String {
         var binNum = ""
         try {
-            if (num == 0){
+            if (num == 0) {
                 return num.toString()
             }
 
             var quotient = num
-            while (quotient > 0){
+            while (quotient > 0) {
                 val remainder = quotient % 2
                 binNum += remainder.toString()
                 quotient /= 2
             }
             binNum = binNum.reversed()
             return binNum
-        } catch (e: Exception) { Log.d("MyLog", "conv $e") }
+        } catch (e: Exception) {
+            Log.d("MyLog", "conv $e")
+        }
         return binNum
     }
 
     // принимает ArrayList<UByte>, возвращает ArrayList<String> в двоичном виде
-    fun getUByteListToBinStringList(uByteList: ArrayList<UByte>): ArrayList<String>{
+    fun getUByteListToBinStringList(uByteList: ArrayList<UByte>): ArrayList<String> {
         val list = ArrayList<String>(4)
         uByteList.forEach { num ->
             try {
                 var binNum = ""
                 var quotient = num.toInt()
 
-                if (num.toInt() == 0){
+                if (num.toInt() == 0) {
                     binNum = "00000000"
                     list.add(binNum)
                     return@forEach
                 }
 
-                while (quotient > 0){
+                while (quotient > 0) {
                     val remainder = quotient % 2
                     binNum += remainder.toString()
                     quotient /= 2
                 }
 
-                if (binNum.length < 8){
-                    while (binNum.length < 8){
+                if (binNum.length < 8) {
+                    while (binNum.length < 8) {
                         binNum += "0"
                     }
                 }
                 binNum = binNum.reversed()
                 list.add(binNum)
 
-            } catch (e: Exception) { Log.d("MyLog", "uByteToBin $e") }
+            } catch (e: Exception) {
+                Log.d("MyLog", "uByteToBin $e")
+            }
         }
 
         return list
     }
 
     // возвращает маску ArrayList<UByte> в десятичном виде
-    fun getMaskUByteList(): ArrayList<UByte>{
+    fun getMaskUByteList(): ArrayList<UByte> {
         val mask = ArrayList<UByte>()
 
         try {
@@ -315,7 +320,7 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает маску в ArrayList<UByte>, возвращает String wildcard в десятичном виде
-    fun getWildcard(mask: ArrayList<UByte>): String{
+    fun getWildcard(mask: ArrayList<UByte>): String {
         var wildcard = ""
 
         try {
@@ -329,7 +334,7 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает ipString String, возвращает ArrayList<UByte> в десятичном виде
-    fun getIpToUByteList(ipString: String): ArrayList<UByte>{
+    fun getIpToUByteList(ipString: String): ArrayList<UByte> {
         val ip = ArrayList<UByte>()
         try {
             ipString.split(".").forEach { b ->
@@ -343,16 +348,16 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает netMask: String, ipString: String, возвращает network: String в десятичном виде
-    fun getNetwork(netMask: String, ipString: String): String{
+    fun getNetwork(netMask: String, ipString: String): String {
         var network = ""
 
         try {
             val maskb = ArrayList<UByte>()
-            netMask!!.split(".").forEach { b ->
+            netMask.split(".").forEach { b ->
                 maskb.add(b.toUByte())
             }
             val ip1b = ArrayList<UByte>()
-            ipString!!.split(".").forEach { b ->
+            ipString.split(".").forEach { b ->
                 ip1b.add(b.toUByte())
             }
             for (i in 0..3) {
@@ -366,8 +371,8 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает network: String, hosts: String, возвращает firstHost: String в десятичном виде
-    fun getFirstHost(network: String, hosts: String): String{
-        if (hosts == "0"){
+    fun getFirstHost(network: String, hosts: String): String {
+        if (hosts == "0") {
             return "No hosts available"
         }
         var firstHost = ""
@@ -384,8 +389,8 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает broadcast: String, hosts: String, возвращает lastHost: String в десятичном виде
-    fun getLastHost(broadcast: String, hosts: String): String{
-        if (hosts == "0"){
+    fun getLastHost(broadcast: String, hosts: String): String {
+        if (hosts == "0") {
             return "No hosts available"
         }
         var lastHost = ""
@@ -402,13 +407,13 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает string: String, возвращает String в шеснадцатиричном виде
-    fun getHex(string: String): String{
+    fun getHex(string: String): String {
         try {
             val list = ArrayList<String>()
             string.split(".").forEach { list.add(it.toLong().toString(16)) }
             Log.d("MyLog", "getHex $list")
             return list.toString().removeSuffix("]")
-                        .removePrefix("[").replace(", ", ":").uppercase(Locale.ROOT)
+                .removePrefix("[").replace(", ", ":").uppercase(Locale.ROOT)
         } catch (e: Exception) {
             Log.d("MyLog", "getHex $e")
         }
@@ -416,7 +421,7 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // принимает string: String, возвращает String в двоичном виде
-    fun getBin(string: String): String{
+    fun getBin(string: String): String {
         val list = ArrayList<UByte>()
         string.split(".").forEach { list.add(it.toUByte()) }
 
