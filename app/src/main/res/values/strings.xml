@@ -11,4 +11,6 @@
     <string name="hosts">Hosts: </string>
     <string name="subnets">Subnets: </string>
     <string name="IPver">IPv4</string>
+    <string name="ping">Ping IP</string>
+    <string name="info">Информация по IP</string>
 </resources>

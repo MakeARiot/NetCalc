@@ -44,7 +44,6 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-
     }
 
     @SuppressLint("SetTextI18n", "ResourceType")
@@ -84,7 +83,7 @@ class MainActivity2 : AppCompatActivity() {
 
         val ip = IPv4(maskString!!)
 
-        val mask = ip.getMaskUByteList()
+        val mask = ip.convertMaskToUByteList()
         val wildcard = ip.getWildcard(mask).removeSuffix(".")
         val bitmask = maskString!!.split(" - ")[0]
         val netmask = maskString!!.split(" - ")[1]
@@ -131,28 +130,27 @@ class MainActivity2 : AppCompatActivity() {
             firstHostBin!!.text = ip.getBin(firsthost)
             lastHostBin!!.text = ip.getBin(lasthost)
 
-        } catch (e: Exception) {
-            Log.d("MyLog", "$e")
-        }
+        } catch (e: Exception) { Log.d("MyLog", "$e") }
     }
 }
 
-class IPv4(val maskString: String){
+class IPv4(private val maskString: String){
 
-    // возвращает ArrayList<String> количество подсетей, количество хостов
+    // возвращает ArrayList<String> количество подсетей[0], количество хостов[1]
     fun getNumberOfSubnetsHosts(netmask: String): ArrayList<String>? {
         try {
             val net = Array(4) { "" }
             var binnetmaskstr = ""
             val list = ArrayList<Int>()
-            Log.d("MyLog", netmask)
+            Log.d("MyLog", """getNumberOfSubnetsHosts: 
+                |mask $maskString""".trimMargin())
 
             netmask.split(".").forEach { list.add(it.toInt()) }
 
             for (i in 0 until 4) {
                 var str = convStrToBin(list[i])
                 if (str.length <= 8) {
-                    for (i in 0 until 8 - str.length) {
+                    for (j in 0 until 8 - str.length) {
                         str += "0"
                     }
                 }
@@ -181,12 +179,10 @@ class IPv4(val maskString: String){
                     }
                 }
             }
-            Log.d("MyLog", "ones: $onecounter zeros: $zerocounter")
-            var subnets = 0
+
             var hosts: Long = 0
             val base = 2
-
-            subnets = base.toDouble().pow(onecounter).toInt()
+            val subnets = base.toDouble().pow(onecounter).toInt()
 
             for (i in 0 until zerocounter - 1) {
                 if (i == 0) {
@@ -195,7 +191,8 @@ class IPv4(val maskString: String){
                 hosts *= base
             }
             hosts -= 2
-            Log.d("MyLog", "subn: $subnets hosts: $hosts")
+            Log.d("MyLog", """getNumberOfSubnetsHosts:
+                |subn: $subnets hosts: $hosts""".trimMargin())
             if (hosts < 0) {
                 hosts = 0
             }
@@ -204,25 +201,26 @@ class IPv4(val maskString: String){
             res.add("$hosts")
             return res
 
-        } catch (e: java.lang.Exception) {
-            Log.d("MyLog", "$e")
-        }
+        } catch (e: java.lang.Exception) { Log.d("MyLog", "$e") }
+
         return null
     }
 
     // возвращает String broadcast в десятичном виде
     fun getBroadcast(netmask: String, network: String): String {
         val maskUByteList =
-            getUByteListToBinStringList(getIpToUByteList(netmask))
+            convertUByteListToBinStringList(convertIpToUByteList(netmask))
                 .toString().removeSuffix("]").removePrefix("[")
                 .replace(", ", ".")
         val ipUByteList =
-            getUByteListToBinStringList(getIpToUByteList(network))
+            convertUByteListToBinStringList(convertIpToUByteList(network))
                 .toString().removeSuffix("]").removePrefix("[")
                 .replace(", ", ".")
 
-        Log.d("MyLog", "mask ${maskUByteList}")
-        Log.d("MyLog", "network ${ipUByteList}")
+        Log.d("MyLog", """getBroadcast:
+            mask $maskUByteList 
+            network $ipUByteList
+        """.trimMargin())
 
         var index = 0
         for (i in maskUByteList.indices) {
@@ -240,18 +238,20 @@ class IPv4(val maskString: String){
             }
         }
         val broadcast = sb.toString() // двоичное представление бродкаста
-        Log.d("MyLog", "broadcast ${broadcast}")
+        Log.d("MyLog", """getBroadcast: 
+            |broadcast $broadcast""".trimMargin())
 
         val brDecList = ArrayList<UByte>()
         broadcast.split(".").forEach { brDecList.add(it.toInt(2).toUByte()) }
         val brDec = brDecList.toString().removeSuffix("]").removePrefix("[")
             .replace(", ", ".")
-        Log.d("MyLog", "broadcast Int $brDecList")
+        Log.d("MyLog", """getBroadcast: 
+            |broadcast Int $brDecList""".trimMargin())
 
         return brDec
     }
 
-    // принимает число, возвращет строку в двоичном виде
+    // принимает num: Int, возвращет : String в двоичном виде
     private fun convStrToBin(num: Int): String {
         var binNum = ""
         try {
@@ -267,14 +267,13 @@ class IPv4(val maskString: String){
             }
             binNum = binNum.reversed()
             return binNum
-        } catch (e: Exception) {
-            Log.d("MyLog", "conv $e")
-        }
+        } catch (e: Exception) { Log.d("MyLog", "conv $e") }
+
         return binNum
     }
 
     // принимает ArrayList<UByte>, возвращает ArrayList<String> в двоичном виде
-    fun getUByteListToBinStringList(uByteList: ArrayList<UByte>): ArrayList<String> {
+    fun convertUByteListToBinStringList(uByteList: ArrayList<UByte>): ArrayList<String> {
         val list = ArrayList<String>(4)
         uByteList.forEach { num ->
             try {
@@ -301,24 +300,23 @@ class IPv4(val maskString: String){
                 binNum = binNum.reversed()
                 list.add(binNum)
 
-            } catch (e: Exception) {
-                Log.d("MyLog", "uByteToBin $e")
-            }
+            } catch (e: Exception) { Log.d("MyLog", "uByteToBin $e") }
         }
+
         return list
     }
 
     // возвращает маску ArrayList<UByte> в десятичном виде
-    fun getMaskUByteList(): ArrayList<UByte> {
+    fun convertMaskToUByteList(): ArrayList<UByte> {
         val mask = ArrayList<UByte>()
         try {
             maskString.split(" - ")[1].split(".").forEach { b ->
                 mask.add(b.toUByte())
             }
             return mask
-        } catch (e: Exception) {
-            Log.d("MyLog", "Mask $e")
-        }
+
+        } catch (e: Exception) { Log.d("MyLog", "Mask $e") }
+
         return mask
     }
 
@@ -329,23 +327,23 @@ class IPv4(val maskString: String){
             // обратная маска
             mask.forEach { b -> wildcard += "${b.inv()}." }
             return wildcard
-        } catch (e: Exception) {
-            Log.d("MyLog", "Wildcard $e")
-        }
+
+        } catch (e: Exception) { Log.d("MyLog", "Wildcard $e") }
+
         return wildcard
     }
 
     // принимает ipString String, возвращает ArrayList<UByte> в десятичном виде
-    fun getIpToUByteList(ipString: String): ArrayList<UByte> {
+    fun convertIpToUByteList(ipString: String): ArrayList<UByte> {
         val ip = ArrayList<UByte>()
         try {
             ipString.split(".").forEach { b ->
                 ip.add(b.toUByte())
             }
             return ip
-        } catch (e: Exception) {
-            Log.d("MyLog", "getIpToUByteList $e")
-        }
+
+        } catch (e: Exception) { Log.d("MyLog", "getIpToUByteList $e") }
+
         return ip
     }
 
@@ -365,9 +363,9 @@ class IPv4(val maskString: String){
                 network += "${(maskb[i] and ip1b[i])}."
             }
             return network.removeSuffix(".")
-        } catch (e: Exception) {
-            Log.d("MyLog", "network $e")
-        }
+
+        } catch (e: Exception) { Log.d("MyLog", "network $e") }
+
         return network
     }
 
@@ -385,7 +383,9 @@ class IPv4(val maskString: String){
             firstHost += "$it."
         }
         firstHost = firstHost.removeSuffix(".")
-        Log.d("MyLog", "getFirstHost $firstHost")
+        Log.d("MyLog", """getFirstHost: 
+            |firstHost $firstHost""".trimMargin())
+
         return firstHost
     }
 
@@ -403,7 +403,9 @@ class IPv4(val maskString: String){
             lastHost += "$it."
         }
         lastHost = lastHost.removeSuffix(".")
-        Log.d("MyLog", "getLastHost $lastHost")
+        Log.d("MyLog", """getLastHost: 
+            |getLastHost $lastHost""".trimMargin())
+
         return lastHost
     }
 
@@ -412,12 +414,12 @@ class IPv4(val maskString: String){
         try {
             val list = ArrayList<String>()
             string.split(".").forEach { list.add(it.toLong().toString(16)) }
-            Log.d("MyLog", "getHex $list")
+
             return list.toString().removeSuffix("]")
                 .removePrefix("[").replace(", ", ":").uppercase(Locale.ROOT)
-        } catch (e: Exception) {
-            Log.d("MyLog", "getHex $e")
-        }
+
+        } catch (e: Exception) { Log.d("MyLog", "getHex $e") }
+
         return ""
     }
 
@@ -426,7 +428,7 @@ class IPv4(val maskString: String){
         val list = ArrayList<UByte>()
         string.split(".").forEach { list.add(it.toUByte()) }
 
-        return getUByteListToBinStringList(list).toString().removePrefix("[")
+        return convertUByteListToBinStringList(list).toString().removePrefix("[")
             .removeSuffix("]").replace(", ", ".")
     }
 
@@ -434,11 +436,11 @@ class IPv4(val maskString: String){
     fun getMsNw(netmask: String, network: String): ArrayList<String> {
         val res = ArrayList<String>(2)
         val maskStrBin =
-            getUByteListToBinStringList(getIpToUByteList(netmask))
+            convertUByteListToBinStringList(convertIpToUByteList(netmask))
                 .toString().removeSuffix("]").removePrefix("[")
                 .replace(", ", ".")
         val netwStrBin =
-            getUByteListToBinStringList(getIpToUByteList(network))
+            convertUByteListToBinStringList(convertIpToUByteList(network))
                 .toString().removeSuffix("]").removePrefix("[")
                 .replace(", ", ".")
         res.add(maskStrBin)

@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.netcalc.IPv4.*
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.*
 import java.io.BufferedReader
@@ -152,6 +151,7 @@ class MainActivity() : AppCompatActivity() {
                 }
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+
             // рассчитать из одной ли сети адреса
             btnOneNet!!.setOnClickListener {
                 try{
@@ -159,9 +159,10 @@ class MainActivity() : AppCompatActivity() {
                         Toast.makeText(applicationContext, "Введи оба айпи", Toast.LENGTH_LONG).show()
                         return@setOnClickListener
                     }
-                    isInOneNet(ip1tv!!, ip2tv!!, masktv!!, restv!!)
+                    Toast.makeText(applicationContext, isInOneNet(ip1tv!!, ip2tv!!, masktv!!, restv!!), Toast.LENGTH_LONG).show()
                 } catch (e: Exception){ Log.d("MyLog", e.toString()) }
             }
+
             // вся инфа по сетям для 2 ip, переход на 2 экран
             btnIp2!!.setOnClickListener{
                 Log.d("MyLog", "-----------1--------------")
@@ -229,7 +230,7 @@ class MainActivity() : AppCompatActivity() {
 
     // проверяет в одной ли сети два ip, сразу выводит результат в TextView
     fun isInOneNet(ip1tv: TextInputEditText, ip2tv: TextInputEditText,
-                   masktv: TextInputEditText, restv: TextView) {
+                   masktv: TextInputEditText, restv: TextView): String {
         val mask = ArrayList<UByte>()
         masktv.text.toString().split(".").forEach { b ->
             mask.add(b.toUByte())
@@ -250,9 +251,9 @@ class MainActivity() : AppCompatActivity() {
             listres2.add(mask[i] and ip2[i])
         }
 
-        if (listres1 == listres2){
-            restv.text = "Узлы находятся в одной сети"
-        } else restv.text = "Узлы находятся в разных сетях"
+        return if (listres1 == listres2){
+            "Узлы находятся в одной сети"
+        } else "Узлы находятся в разных сетях"
     }
 
     // возвращает текст запроса по ip
