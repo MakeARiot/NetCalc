@@ -292,5 +292,4 @@ class MainActivity() : AppCompatActivity() {
         }
         return isAvailable
     }
-    // FFFFFFFFFFFFFFFFFFF
 }
