@@ -136,7 +136,7 @@ class MainActivity2 : AppCompatActivity() {
 
 class IPv4(private val maskString: String){
 
-    // возвращает ArrayList<String> количество подсетей[0], количество хостов[1]
+    // принимает netmask: String возвращает ArrayList<String> количество подсетей[0], количество хостов[1]
     fun getNumberOfSubnetsHosts(netmask: String): ArrayList<String>? {
         try {
             val net = Array(4) { "" }
@@ -148,7 +148,7 @@ class IPv4(private val maskString: String){
             netmask.split(".").forEach { list.add(it.toInt()) }
 
             for (i in 0 until 4) {
-                var str = convStrToBin(list[i])
+                var str = convertIntToBinString(list[i])
                 if (str.length <= 8) {
                     for (j in 0 until 8 - str.length) {
                         str += "0"
@@ -206,7 +206,7 @@ class IPv4(private val maskString: String){
         return null
     }
 
-    // возвращает String broadcast в десятичном виде
+    // возвращает broadcast: String в десятичном виде
     fun getBroadcast(netmask: String, network: String): String {
         val maskUByteList =
             convertUByteListToBinStringList(convertIpToUByteList(netmask))
@@ -252,7 +252,7 @@ class IPv4(private val maskString: String){
     }
 
     // принимает num: Int, возвращет : String в двоичном виде
-    private fun convStrToBin(num: Int): String {
+    private fun convertIntToBinString(num: Int): String {
         var binNum = ""
         try {
             if (num == 0) {
@@ -275,32 +275,15 @@ class IPv4(private val maskString: String){
     // принимает ArrayList<UByte>, возвращает ArrayList<String> в двоичном виде
     fun convertUByteListToBinStringList(uByteList: ArrayList<UByte>): ArrayList<String> {
         val list = ArrayList<String>(4)
+
         uByteList.forEach { num ->
-            try {
-                var binNum = ""
-                var quotient = num.toInt()
-
-                if (num.toInt() == 0) {
-                    binNum = "00000000"
-                    list.add(binNum)
-                    return@forEach
-                }
-
-                while (quotient > 0) {
-                    val remainder = quotient % 2
-                    binNum += remainder.toString()
-                    quotient /= 2
-                }
-
-                if (binNum.length < 8) {
+            var binNum = num.toString(2)
+            if (binNum.length < 8) {
                     while (binNum.length < 8) {
                         binNum += "0"
                     }
                 }
-                binNum = binNum.reversed()
-                list.add(binNum)
-
-            } catch (e: Exception) { Log.d("MyLog", "uByteToBin $e") }
+            list.add(binNum)
         }
 
         return list
